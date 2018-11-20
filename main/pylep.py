@@ -13,6 +13,7 @@ f=0.01
 phase=np.exp(z*np.sqrt(np.pi*f/X)*(1+1j))
 
 def capture_video(phase, device = "/dev/spidev0.0"):
+	np.set_printoptions(threshold=np.nan)
 	print(phase)
 	with Lepton(device) as l:
 		m=1
@@ -47,12 +48,12 @@ def capture_video(phase, device = "/dev/spidev0.0"):
 				print(img.shape)
 				for j in range(0,60):
 					for k in range(0,80):
-						img[j][k]=np_img[i][j][k]
-				img=np.uint8(img)
-				img=cv2.applyColorMap(img,cv2.COLORMAP_HSV)
+						img[j][k]=np_img[j][k][i]
+				# img=np.uint8(img)
+				# img=cv2.applyColorMap(img,cv2.COLORMAP_HSV)
 				# img=cv2.cvtColor(img, cv2.COLOR_HSV2BGR)
 				# img=cv2.cvtColor(img, cv2.COLOR_BGR2Luv)
-				print(img)
+				# print(img)
 				# img=cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 				# cv2.imwrite(input_file_name+"_b_frame_"+str(i)+".jpg",img)
 				frame_array.append(img)
