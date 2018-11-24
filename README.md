@@ -8,7 +8,12 @@ We had used *sci-kit learn, numpy, opencv, [read_thermal.py from @Nervengift](ht
 
 ## Procedure
 
-
+An example video of blood flow of a hand is as follow <br>
+<figure class="video_container">
+  <video controls="true" allowfullscreen="true" poster="https://github.com/SvrAdityaReddy/Thermography_based_Blood_Flow_Imaging/blob/master/main/data_santosh/out0.jpg">
+    <source src="https://github.com/SvrAdityaReddy/Thermography_based_Blood_Flow_Imaging/blob/master/main/data_santosh/s_bldf.avi" type="video/avi">
+  </video>
+</figure>
 
 The entire code for converting thermal images to blood flow can be found under [main](https://github.com/SvrAdityaReddy/Thermography_based_Blood_Flow_Imaging/tree/master/main) directory as [thermal_blood_flow.ipynb](https://github.com/SvrAdityaReddy/Thermography_based_Blood_Flow_Imaging/blob/master/main/thermal_blood_flow.ipynb)
 
