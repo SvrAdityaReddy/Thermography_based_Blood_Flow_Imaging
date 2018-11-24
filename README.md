@@ -1,6 +1,6 @@
 # Thermography based Blood Flow Imaging
 
-In this project we had used FLIR ONE PRO for Android for capturing thermal images. These thermal images are then processed as described in the paper "Thermography-based blood flow imaging in human skin of the hands and feet: a spectral filtering approach" by A A Sagaidachnyi et al [1].
+In this project we have to get blood flow from thermal images. We had used FLIR ONE PRO for Android for capturing thermal images. These thermal images are then processed as described in the paper "Thermography-based blood flow imaging in human skin of the hands and feet: a spectral filtering approach" by A A Sagaidachnyi et al [1].
 
 ## Dependencies
 
@@ -8,12 +8,11 @@ We had used *sci-kit learn, numpy, opencv, [read_thermal.py from @Nervengift](ht
 
 ## Procedure
 
-An example video of blood flow of a hand is as follow <br>
-<figure class="video_container">
-  <video controls="true" allowfullscreen="true" poster="https://github.com/SvrAdityaReddy/Thermography_based_Blood_Flow_Imaging/blob/master/main/data_santosh/out0.jpg">
-    <source src="https://github.com/SvrAdityaReddy/Thermography_based_Blood_Flow_Imaging/blob/master/main/data_santosh/s_bldf.avi" type="video/avi">
-  </video>
-</figure>
+The Blood Flow is constructed from series of thermal images according to the procedure described in the paper.
+
+An example gif of blood flow of a hand is as follow <br>
+
+![](https://github.com/SvrAdityaReddy/Thermography_based_Blood_Flow_Imaging/blob/master/main/data_santosh/s_bldf.gif)
 
 The entire code for converting thermal images to blood flow can be found under [main](https://github.com/SvrAdityaReddy/Thermography_based_Blood_Flow_Imaging/tree/master/main) directory as [thermal_blood_flow.ipynb](https://github.com/SvrAdityaReddy/Thermography_based_Blood_Flow_Imaging/blob/master/main/thermal_blood_flow.ipynb)
 
