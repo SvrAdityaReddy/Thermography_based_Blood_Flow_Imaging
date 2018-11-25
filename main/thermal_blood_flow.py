@@ -1,75 +1,130 @@
+#!/usr/bin/env python
+# coding: utf-8
+
+# ## Libraries
+
+# In[1]:
+
+
 import cv2
-import os
 import numpy as np
+import readthermal as rd
+from matplotlib import pyplot as plt
+from matplotlib.cm import get_cmap
 
-cap=cv2.VideoCapture('ftna.mp4')
-count=0
 
-while(cap.isOpened()):
-    ret,frame=cap.read()
-    if(ret==True):
-        cv2.imwrite("frame_"+str(count)+".jpg",frame)
-        count=count+1
-    else:
-        break
+# ## Reading Thermal Images stored on the System and Converting them to Images with temperature in degrees celsius at each pixel location and storing them in a numpy Array
 
-cap.release()
-cv2.destroyAllWindows()
+# In[2]:
 
-np_img=[]
 
-for i in range(0,640):
-    np_img.append([])
-    for j in range(0,480):
-        np_img[i].append([])
+shape=(480,640)
+# shape=(640,480)
+count=95 # number of images
 
-for i in range(0,count):
-    img=cv2.imread("frame_"+str(i)+".jpg")
-    for j in range(0,640):
-        for k in range(0,480):
-            np_img[j][k].append(img[j][k])
+np_img=np.zeros((shape[0],shape[1],count), dtype=complex)
 
-np_img=np.array(np_img, dtype=complex)
+for i in range(1,count+1):
+    img=rd.extract_thermal(str(i)+".jpg")
+    for j in range(0,shape[0]):
+        for k in range(0,shape[1]):
+            np_img[j][k][i-1]=img[j][k]
 
-# print(np_img.shape)
+
+# ## Printing Dimension of numpy Array
+
+# In[3]:
+
+
+print(np_img.shape)
+
+
+# ## Calculation of Phase to multipled to Fourier Coefficients of times series value of same pixel in Thermogram (Thermal Image)
+
+# In[4]:
+
 
 z=0.002
 k=0.33
 c=3780
 p=1057
 X=k/(c*p)
-f=0.01
+f=0.01 # Endothelial
+# f=0.03 # Neurogenic
+# f=0.07 # Myogenic
 
 phase=np.exp(z*np.sqrt(np.pi*f/X)*(1+1j))
 
-for i in range(0,640):
-    for j in range(0,480):
+
+# ## Printing Phase
+
+# In[5]:
+
+
+print(phase)
+
+
+# ## Calculation of Blood Flow from pixel values of series of Thermograms
+
+# In[6]:
+
+
+for i in range(0,shape[0]):
+    for j in range(0,shape[1]):
         np_img[i][j]=np.fft.fft(np_img[i][j])*phase
 
-for i in range(0,640):
-    for j in range(0,480):
-        np_img[i][j]=np.fft.ifft(np_img[i][j])
+for i in range(0,shape[0]):
+    for j in range(0,shape[1]):
+        np_img[i][j]=np.real(np.fft.ifft(np_img[i][j])) # storing only real component of complex number
 
-print(np_img)
 
-img=[]
+# ## Printing Blood Flow Values
+
+# In[7]:
+
+
+# print(np_img)
+
+
+# ## Seperation Blood Flow values and Normalisation of each frame and apllying color map and Writing to System
+
+# In[8]:
+
+
+cmap = get_cmap('nipy_spectral')
+
 frame_array=[]
 
 for i in range(0,count):
-    for j in range(0,640):
-        img.append([])
-        for k in range(0,480):
-            img[j].append(np_img[j][k][i])
-    img=np.uint8(img)
-    print(img)
-    cv2.imwrite("b_frame_"+str(i)+".jpg",img)
+    img=np.zeros((shape[0],shape[1]))
+    for j in range(0,shape[0]):
+        for k in range(0,shape[1]):
+            img[j][k]=np_img[j][k][i]
+    img=img/np.amax(img)
+    im = plt.imshow(img,cmap=cmap) 
+    plt.savefig("out"+str(i)+".jpg")
     frame_array.append(img)
-    img=[]
 
-fps=3
-out=cv2.VideoWriter("b_ft.avi",cv2.VideoWriter_fourcc(*'DIVX'),fps,(480,640))
 
-for i in range(len(frame_array)):
-    out.write(frame_array[i])
+# ## Generating Blood Flow Video from Blood Flow Images
+
+# In[9]:
+
+
+fps=2
+out=cv2.VideoWriter("s_bldf"+".avi",cv2.VideoWriter_fourcc(*'XVID'),fps,(432,288))
+
+for i in range(count):
+    img=cv2.imread("out"+str(i)+".jpg")
+    out.write(img)
 
 out.release()
+
+
+# ## Printing length of Frame Array
+
+# In[10]:
+
+
+print(len(frame_array))
+
